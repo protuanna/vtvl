@@ -31,6 +31,10 @@ if database_url:
     # Supabase/Heroku hay tra ve prefix "postgres://", SQLAlchemy 2.x can "postgresql://".
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
+    # Chi dinh ro driver psycopg2 (da cai qua requirements.txt) de tranh SQLAlchemy
+    # tu dong thu driver "psycopg" (v3, chua cai) truoc khi fallback.
+    if database_url.startswith("postgresql://"):
+        database_url = database_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 else:
     os.makedirs(os.path.join(BASE_DIR, "instance"), exist_ok=True)
     database_url = "sqlite:///" + os.path.join(BASE_DIR, "instance", "vtvl.db")
