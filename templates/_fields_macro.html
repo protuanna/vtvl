@@ -26,6 +26,18 @@
     {% else %}
       <input type="text" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" {% if field.get('required') %}required{% endif %}>
     {% endif %}
-    {% if field.get('help') %}<p class="field-help">{{ field.help }}</p>{% endif %}
+    {% if field.get('guide') %}
+      {% set g = field.guide %}
+      <details class="field-guide">
+        <summary>Hướng dẫn nhập{% if g.loai %} · {{ g.loai }}{% endif %}</summary>
+        <dl>
+          {% if g.dien %}<dt>Điền nội dung gì</dt><dd>{{ g.dien }}</dd>{% endif %}
+          {% if g.nguon %}<dt>Nguồn lấy dữ liệu</dt><dd>{{ g.nguon }}</dd>{% endif %}
+          {% if g.cach_ghi %}<dt>Cách ghi</dt><dd>{{ g.cach_ghi }}</dd>{% endif %}
+          {% if g.loai %}<dt>Loại thao tác</dt><dd>{{ g.loai }}</dd>{% endif %}
+          {% if g.luu_y %}<dt>Lưu ý / không được làm</dt><dd>{{ g.luu_y }}</dd>{% endif %}
+        </dl>
+      </details>
+    {% endif %}
   </div>
 {% endmacro %}
