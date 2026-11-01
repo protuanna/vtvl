@@ -1,0 +1,31 @@
+{% macro render_field(field, value=none, name_override=none, ref_options=none) %}
+  {% set fname = name_override if name_override else field.name %}
+  <div class="field">
+    <label for="f_{{ fname }}">{{ field.label }}{% if field.get('required') %} <span class="req">*</span>{% endif %}</label>
+    {% if field.type == 'textarea' %}
+      <textarea id="f_{{ fname }}" name="{{ fname }}" rows="2">{{ value if value is not none else '' }}</textarea>
+    {% elif field.type == 'select' %}
+      <select id="f_{{ fname }}" name="{{ fname }}" {% if field.get('required') %}required{% endif %}>
+        <option value="">-- Chọn --</option>
+        {% for opt in field.options %}
+          <option value="{{ opt }}" {% if value == opt %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    {% elif field.type == 'select_soft' %}
+      <input list="dl_{{ fname }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}">
+      <datalist id="dl_{{ fname }}">
+        {% for opt in field.options %}<option value="{{ opt }}">{% endfor %}
+      </datalist>
+    {% elif field.type == 'ref' %}
+      <input list="dl_{{ fname }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" {% if field.get('required') %}required{% endif %}>
+      <datalist id="dl_{{ fname }}">
+        {% for opt in (ref_options.get(field.name, []) if ref_options else []) %}<option value="{{ opt }}">{% endfor %}
+      </datalist>
+    {% elif field.type in ('number', 'int') %}
+      <input type="number" step="{{ 'any' if field.type == 'number' else '1' }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" {% if field.get('required') %}required{% endif %}>
+    {% else %}
+      <input type="text" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" {% if field.get('required') %}required{% endif %}>
+    {% endif %}
+    {% if field.get('help') %}<p class="field-help">{{ field.help }}</p>{% endif %}
+  </div>
+{% endmacro %}

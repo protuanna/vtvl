@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Công cụ Bộ biểu VTVL{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}">Bộ biểu VTVL</a>
+    <nav>
+      <a href="{{ url_for('index') }}">Đơn vị</a>
+      <a href="{{ url_for('san_pham_list_view') }}">Danh mục sản phẩm</a>
+      <a href="{{ url_for('tong_hop') }}">Tổng hợp &amp; Xuất</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

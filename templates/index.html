@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Danh sách đơn vị – Bộ biểu VTVL{% endblock %}
+{% block content %}
+  <h1>Danh sách đơn vị</h1>
+
+  <table class="data-table">
+    <thead><tr><th>Mã cơ quan</th><th>Tên cơ quan</th><th></th></tr></thead>
+    <tbody>
+      {% for dv in don_vis %}
+        <tr>
+          <td><a href="{{ url_for('don_vi_dashboard', don_vi_id=dv.id) }}">{{ dv.ma_co_quan }}</a></td>
+          <td>{{ dv.ten_co_quan }}</td>
+          <td class="actions">
+            <a href="{{ url_for('don_vi_dashboard', don_vi_id=dv.id) }}">Mở</a>
+            <form method="post" action="{{ url_for('don_vi_xoa', don_vi_id=dv.id) }}" class="inline-form" onsubmit="return confirm('Xóa đơn vị này và toàn bộ dữ liệu 9 biểu kèm theo?');">
+              <button type="submit" class="danger">Xóa</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="3">Chưa có đơn vị nào. Tạo đơn vị mới bên dưới.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Tạo đơn vị mới</h2>
+  <form method="post" action="{{ url_for('don_vi_them') }}" class="simple-form">
+    <div class="field">
+      <label for="ma_co_quan">Mã cơ quan</label>
+      <input type="text" id="ma_co_quan" name="ma_co_quan" required placeholder="VD: XTM (Xã Thịnh Minh)">
+    </div>
+    <div class="field">
+      <label for="ten_co_quan">Tên cơ quan</label>
+      <input type="text" id="ten_co_quan" name="ten_co_quan" required placeholder="VD: Đảng ủy xã Thịnh Minh">
+    </div>
+    <button type="submit">Tạo đơn vị</button>
+  </form>
+{% endblock %}

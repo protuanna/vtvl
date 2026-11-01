@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ don_vi.ten_co_quan }} – Bộ biểu VTVL{% endblock %}
+{% block content %}
+  <p><a href="{{ url_for('index') }}">&larr; Danh sách đơn vị</a></p>
+  <h1>{{ don_vi.ten_co_quan }} <span class="muted">({{ don_vi.ma_co_quan }})</span></h1>
+
+  <a class="button" href="{{ url_for('don_vi_xuat', don_vi_id=don_vi.id) }}">Xuất Excel đơn vị này</a>
+  <a class="button" href="{{ url_for('don_vi_import_excel', don_vi_id=don_vi.id) }}">Nhập từ file Excel có sẵn</a>
+
+  <div class="step-guide">
+    <strong>Hướng dẫn trình tự — nên làm theo đúng thứ tự này:</strong>
+    <ol>
+      {% for bieu in bieu_list %}
+        <li>
+          <span class="step-bieu">{{ bieu.label }}</span>
+          {% if bieu.get('step_note') %} — <span class="step-note">{{ bieu.step_note }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+    <p class="step-note" style="margin:0.4rem 0 0;">Danh mục sản phẩm (DM_SAN_PHAM, ở menu trên) dùng chung toàn hệ thống — nên nhập trước Khối lượng (B1) nếu đã có định mức phút chuẩn được xác nhận; không bắt buộc.</p>
+  </div>
+
+  <table class="data-table">
+    <thead><tr><th>Bước</th><th>Biểu</th><th>Số dòng đã nhập</th><th></th></tr></thead>
+    <tbody>
+      {% for bieu in bieu_list %}
+        <tr>
+          <td>{{ bieu.step }}</td>
+          <td>{{ bieu.label }}</td>
+          <td>{{ counts[bieu.key] }}</td>
+          <td><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">Mở biểu</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

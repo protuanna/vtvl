@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "_fields_macro.html" import render_field %}
+{% block title %}Sửa sản phẩm{% endblock %}
+{% block content %}
+  <p><a href="{{ url_for('san_pham_list_view') }}">&larr; Danh mục sản phẩm</a></p>
+  <h1>Sửa sản phẩm</h1>
+  <form method="post" class="simple-form">
+    {% for f in bieu.fields %}{{ render_field(f, getattr(row, f.name)) }}{% endfor %}
+    <button type="submit">Lưu thay đổi</button>
+  </form>
+{% endblock %}

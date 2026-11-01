@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "_fields_macro.html" import render_field %}
+{% block title %}Danh mục sản phẩm – Bộ biểu VTVL{% endblock %}
+{% block content %}
+  <h1>{{ bieu.label }}</h1>
+  <p class="muted">Danh mục dùng chung cho toàn hệ thống (sheet {{ bieu.sheet_name }}), do cơ quan đầu mối quản lý — không gán theo đơn vị.
+    {% if bieu.get('step_note') %}{{ bieu.step_note }}{% endif %}</p>
+
+  <div class="actions" style="margin-bottom:1rem;">
+    <button type="button" onclick="document.getElementById('modal-add').classList.add('open')">+ Thêm sản phẩm mới</button>
+  </div>
+
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          {% for f in bieu.fields %}<th>{{ f.label }}</th>{% endfor %}
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            {% for f in bieu.fields %}<td>{{ getattr(row, f.name) }}</td>{% endfor %}
+            <td class="actions">
+              <a href="{{ url_for('san_pham_sua', row_id=row.id) }}">Sửa</a>
+              <form method="post" action="{{ url_for('san_pham_xoa', row_id=row.id) }}" class="inline-form" onsubmit="return confirm('Xóa sản phẩm này?');">
+                <button type="submit" class="danger">Xóa</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="{{ bieu.fields|length + 1 }}">Chưa có sản phẩm nào. Bấm "+ Thêm sản phẩm mới" ở trên để bắt đầu.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div id="modal-add" class="modal-backdrop" onclick="if(event.target===this) this.classList.remove('open')">
+    <div class="modal-box">
+      <button type="button" class="modal-close" onclick="document.getElementById('modal-add').classList.remove('open')">&times;</button>
+      <h2>Thêm sản phẩm mới</h2>
+      <form method="post" action="{{ url_for('san_pham_them') }}">
+        {% for f in bieu.fields %}{{ render_field(f) }}{% endfor %}
+        <button type="submit">Lưu sản phẩm</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

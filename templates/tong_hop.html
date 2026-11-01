@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Tổng hợp & Xuất Excel{% endblock %}
+{% block content %}
+  <h1>Tổng hợp nhiều đơn vị &amp; Xuất Excel</h1>
+  <p class="muted">Chọn các đơn vị cần gộp. File xuất ra sẽ nối dữ liệu các đơn vị theo đúng thứ tự chọn vào cùng một bản mẫu 9 biểu (Danh mục sản phẩm luôn được ghi đầy đủ, dùng chung).</p>
+
+  {% if not don_vis %}
+    <p>Chưa có đơn vị nào. <a href="{{ url_for('index') }}">Tạo đơn vị mới</a>.</p>
+  {% else %}
+    <form method="post" class="simple-form">
+      <div class="checkbox-list">
+        {% for dv in don_vis %}
+          <label class="checkbox-item">
+            <input type="checkbox" name="don_vi_ids" value="{{ dv.id }}">
+            {{ dv.ten_co_quan }} ({{ dv.ma_co_quan }})
+          </label>
+        {% endfor %}
+      </div>
+      <button type="submit">Xuất Excel tổng hợp</button>
+    </form>
+  {% endif %}
+{% endblock %}

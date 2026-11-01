@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "_fields_macro.html" import render_field %}
+{% block title %}Sửa dòng – {{ bieu.label }}{% endblock %}
+{% block content %}
+  <p><a href="{{ back_url }}">&larr; {{ bieu.label }}</a></p>
+  <h1>Sửa dòng – {{ bieu.label }}</h1>
+  <form method="post" class="simple-form">
+    {% for f in bieu.fields %}{{ render_field(f, getattr(row, f.name), none, ref_options) }}{% endfor %}
+    <button type="submit">Lưu thay đổi</button>
+  </form>
+{% endblock %}

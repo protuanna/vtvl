@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Nhập từ tài liệu (AI) – {{ bieu.label }}{% endblock %}
+{% block content %}
+  <p><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">&larr; {{ bieu.label }}</a></p>
+  <h1>Nhập từ tài liệu (AI) – {{ bieu.label }}</h1>
+  <p class="muted">
+    Tải lên một file PDF hoặc DOCX (quyết định, danh mục, văn bản chức năng-nhiệm vụ...). AI sẽ đọc nội dung
+    (kể cả bản scan, bằng khả năng nhận diện hình ảnh) và gợi ý các dòng dữ liệu cho biểu này.
+    Bạn sẽ được xem lại và chỉnh sửa trước khi lưu — không có gì được lưu tự động.
+  </p>
+
+  <form method="post" enctype="multipart/form-data" class="simple-form">
+    <div class="field">
+      <label for="file">Chọn file (.pdf hoặc .docx)</label>
+      <input type="file" id="file" name="file" accept=".pdf,.docx" required>
+    </div>
+    <button type="submit">Đọc và trích xuất</button>
+  </form>
+
+  <p class="muted">Cần biến môi trường <code>ANTHROPIC_API_KEY</code> đã cấu hình trên máy chạy app (xem README.md).</p>
+{% endblock %}

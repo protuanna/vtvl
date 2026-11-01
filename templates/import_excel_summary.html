@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Kết quả đọc file – {{ don_vi.ten_co_quan }}{% endblock %}
+{% block content %}
+  <p><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}">&larr; {{ don_vi.ten_co_quan }}</a></p>
+  <h1>Kết quả đọc file "{{ source_name }}"</h1>
+  <p class="muted">Bấm "Xem & xác nhận" ở từng biểu để kiểm tra, sửa lại nếu cần rồi mới lưu — chưa biểu nào được lưu vào dữ liệu chính thức.</p>
+
+  <table class="data-table">
+    <thead><tr><th>Biểu</th><th>Kết quả</th><th></th></tr></thead>
+    <tbody>
+      {% for r in results %}
+        <tr>
+          <td>{{ r.bieu.label }}</td>
+          {% if r.ok %}
+            <td>Đọc được {{ r.count }} dòng</td>
+            <td><a href="{{ url_for('bieu_import_ai_review', don_vi_id=don_vi.id, bieu_key=r.bieu.key, staging_id=r.staging_id) }}">Xem &amp; xác nhận</a></td>
+          {% else %}
+            <td class="muted">{{ r.message }}</td>
+            <td></td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

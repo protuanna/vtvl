@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Nhập từ file Excel có sẵn – {{ don_vi.ten_co_quan }}{% endblock %}
+{% block content %}
+  {% if bieu %}
+    <p><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">&larr; {{ bieu.label }}</a></p>
+    <h1>Nhập từ file Excel có sẵn — {{ bieu.label }}</h1>
+    <p class="muted">
+      Chỉ đọc đúng 1 sheet "{{ bieu.sheet_name }}" trong file tải lên. File không cần đúng cấu trúc
+      đủ cả 9 biểu — chỉ cần có sheet tên đúng như vậy với cột giống file mẫu chính thức.
+    </p>
+  {% else %}
+    <p><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}">&larr; {{ don_vi.ten_co_quan }}</a></p>
+    <h1>Nhập từ file Excel có sẵn — cả 9 biểu</h1>
+    <p class="muted">
+      Dùng khi đơn vị đã có sẵn một file Excel làm thủ công theo đúng cấu trúc file mẫu chính thức
+      (tên sheet và cột giống hệt file mẫu Bộ biểu VTVL). App sẽ đọc tất cả sheet (A1 → D2) trong
+      cùng một file.
+    </p>
+  {% endif %}
+  <p class="muted">Cho bạn xem lại và xác nhận trước khi lưu — không tự động ghi thẳng. Không cần AI, đọc trực tiếp đúng cột nên nhanh và chính xác tuyệt đối với dữ liệu đã có trong file.</p>
+
+  <form method="post" enctype="multipart/form-data" class="simple-form">
+    <div class="field">
+      <label for="file">Chọn file (.xlsx)</label>
+      <input type="file" id="file" name="file" accept=".xlsx" required>
+    </div>
+    <button type="submit">Đọc file</button>
+  </form>
+{% endblock %}

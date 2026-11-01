@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "_fields_macro.html" import render_field %}
+{% block title %}{{ bieu.label }} – {{ don_vi.ten_co_quan }}{% endblock %}
+{% block content %}
+  <p><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}">&larr; {{ don_vi.ten_co_quan }}</a></p>
+  <h1>{{ bieu.label }}</h1>
+  <p class="muted">Sheet trong file mẫu: {{ bieu.sheet_name }} — tối đa {{ "{:,}".format(30000) }} dòng/đơn vị khi xuất.
+    {% if bieu.get('step_note') %}{{ bieu.step_note }}{% endif %}</p>
+
+  <div class="actions" style="margin-bottom:1rem;">
+    <button type="button" onclick="document.getElementById('modal-add').classList.add('open')">+ Thêm dòng mới</button>
+    <a class="button" href="{{ url_for('bieu_import_excel', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">Nhập từ Excel có sẵn</a>
+    <a class="button" href="{{ url_for('bieu_import_ai', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">Nhập từ tài liệu (AI)</a>
+  </div>
+
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          {% for f in bieu.fields %}<th>{{ f.label }}</th>{% endfor %}
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            {% for f in bieu.fields %}<td>{{ getattr(row, f.name) }}</td>{% endfor %}
+            <td class="actions">
+              <a href="{{ url_for('bieu_sua', don_vi_id=don_vi.id, bieu_key=bieu.key, row_id=row.id) }}">Sửa</a>
+              <form method="post" action="{{ url_for('bieu_xoa', don_vi_id=don_vi.id, bieu_key=bieu.key, row_id=row.id) }}" class="inline-form" onsubmit="return confirm('Xóa dòng này?');">
+                <button type="submit" class="danger">Xóa</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="{{ bieu.fields|length + 1 }}">Chưa có dữ liệu. Bấm "+ Thêm dòng mới" ở trên để bắt đầu.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div id="modal-add" class="modal-backdrop" onclick="if(event.target===this) this.classList.remove('open')">
+    <div class="modal-box">
+      <button type="button" class="modal-close" onclick="document.getElementById('modal-add').classList.remove('open')">&times;</button>
+      <h2>Thêm dòng mới — {{ bieu.label }}</h2>
+      <form method="post" action="{{ action_url }}">
+        {% for f in bieu.fields %}{{ render_field(f, none, none, ref_options) }}{% endfor %}
+        <button type="submit">Lưu dòng mới</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
