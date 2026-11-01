@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 {% from "_fields_macro.html" import render_field %}
+{% from "_ui_macro.html" import btn %}
 {% block title %}Xem lại dữ liệu trích xuất – {{ bieu.label }}{% endblock %}
 {% block content %}
-  <p><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">&larr; {{ bieu.label }}</a></p>
-  <h1>Xem lại dữ liệu trích xuất từ "{{ source_name }}"</h1>
-  <p class="muted">{{ note }}</p>
-  <p class="muted">AI đã gợi ý {{ rows|length }} dòng. Kiểm tra, sửa lại nếu cần, bỏ chọn dòng không muốn nhập, rồi bấm Lưu.</p>
+  <p class="mb-2"><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}" class="text-sm text-primary hover:text-primary-hover">&larr; {{ bieu.label }}</a></p>
+  <h1 class="mb-1 text-2xl font-semibold text-black/[0.88]">Xem lại dữ liệu trích xuất từ "{{ source_name }}"</h1>
+  <p class="text-sm text-black/45">{{ note }}</p>
+  <p class="mb-5 text-sm text-black/45">AI đã gợi ý {{ rows|length }} dòng. Kiểm tra, sửa lại nếu cần, bỏ chọn dòng không muốn nhập, rồi bấm Lưu.</p>
 
-  <form method="post" class="simple-form">
+  <form method="post">
     {% for row in rows %}
       {% set row_idx = loop.index0 %}
-      <fieldset style="margin-bottom:1.2rem; border:1px solid #ccc; border-radius:6px; padding:0.8rem;">
-        <legend>
-          <label>
-            <input type="checkbox" name="include_{{ row_idx }}" checked>
+      <fieldset class="mb-5 rounded-lg border border-black/[0.06] bg-white p-5 shadow-card">
+        <legend class="px-1 text-sm font-medium text-black/[0.88]">
+          <label class="flex items-center gap-2">
+            <input type="checkbox" name="include_{{ row_idx }}" checked class="h-4 w-4 rounded border-[#d9d9d9] text-primary focus:ring-2 focus:ring-primary/15">
             Dòng {{ loop.index }}
           </label>
         </legend>
@@ -22,6 +23,6 @@
         {% endfor %}
       </fieldset>
     {% endfor %}
-    <button type="submit">Lưu các dòng đã chọn</button>
+    {{ btn('Lưu các dòng đã chọn') }}
   </form>
 {% endblock %}

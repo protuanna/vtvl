@@ -1,25 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Kết quả đọc file – {{ don_vi.ten_co_quan }}{% endblock %}
 {% block content %}
-  <p><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}">&larr; {{ don_vi.ten_co_quan }}</a></p>
-  <h1>Kết quả đọc file "{{ source_name }}"</h1>
-  <p class="muted">Bấm "Xem & xác nhận" ở từng biểu để kiểm tra, sửa lại nếu cần rồi mới lưu — chưa biểu nào được lưu vào dữ liệu chính thức.</p>
+  <p class="mb-2"><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}" class="text-sm text-primary hover:text-primary-hover">&larr; {{ don_vi.ten_co_quan }}</a></p>
+  <h1 class="mb-1 text-2xl font-semibold text-black/[0.88]">Kết quả đọc file "{{ source_name }}"</h1>
+  <p class="mb-5 text-sm text-black/45">Bấm "Xem &amp; xác nhận" ở từng biểu để kiểm tra, sửa lại nếu cần rồi mới lưu — chưa biểu nào được lưu vào dữ liệu chính thức.</p>
 
-  <table class="data-table">
-    <thead><tr><th>Biểu</th><th>Kết quả</th><th></th></tr></thead>
-    <tbody>
-      {% for r in results %}
-        <tr>
-          <td>{{ r.bieu.label }}</td>
-          {% if r.ok %}
-            <td>Đọc được {{ r.count }} dòng</td>
-            <td><a href="{{ url_for('bieu_import_ai_review', don_vi_id=don_vi.id, bieu_key=r.bieu.key, staging_id=r.staging_id) }}">Xem &amp; xác nhận</a></td>
-          {% else %}
-            <td class="muted">{{ r.message }}</td>
-            <td></td>
-          {% endif %}
+  <div class="overflow-x-auto rounded-lg border border-black/[0.06] bg-white shadow-card">
+    <table class="w-full border-collapse text-sm">
+      <thead>
+        <tr class="bg-[#fafafa] text-left text-black/[0.88]">
+          <th class="border-b border-black/[0.06] px-4 py-3 font-medium">Biểu</th>
+          <th class="border-b border-black/[0.06] px-4 py-3 font-medium">Kết quả</th>
+          <th class="border-b border-black/[0.06] px-4 py-3 font-medium"></th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for r in results %}
+          <tr class="transition-colors hover:bg-[#fafafa]">
+            <td class="border-b border-black/[0.06] px-4 py-3 align-top font-medium text-black/[0.88]">{{ r.bieu.label }}</td>
+            {% if r.ok %}
+              <td class="border-b border-black/[0.06] px-4 py-3 align-top">
+                <span class="inline-flex items-center rounded-full bg-[#f6ffed] px-2 py-0.5 text-xs font-medium text-[#389e0d]">Đọc được {{ r.count }} dòng</span>
+              </td>
+              <td class="border-b border-black/[0.06] px-4 py-3 align-top">
+                <a href="{{ url_for('bieu_import_ai_review', don_vi_id=don_vi.id, bieu_key=r.bieu.key, staging_id=r.staging_id) }}" class="text-primary hover:text-primary-hover">Xem &amp; xác nhận</a>
+              </td>
+            {% else %}
+              <td class="border-b border-black/[0.06] px-4 py-3 align-top text-black/45">{{ r.message }}</td>
+              <td class="border-b border-black/[0.06] px-4 py-3 align-top"></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

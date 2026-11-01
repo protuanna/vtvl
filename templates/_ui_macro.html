@@ -1,0 +1,21 @@
+{% macro btn(text, variant='primary', href=none, type='submit', extra='', onclick=none) %}
+  {% set base = 'inline-flex items-center justify-center gap-1.5 rounded-md px-4 py-1.5 text-sm font-medium shadow-sm transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50' %}
+  {% if variant == 'primary' %}
+    {% set cls = base ~ ' bg-primary text-white hover:bg-primary-hover active:bg-primary-active' %}
+  {% elif variant == 'danger' %}
+    {% set cls = base ~ ' bg-white border border-danger text-danger hover:bg-[#fff1f0] hover:border-danger-hover hover:text-danger-hover' %}
+  {% elif variant == 'danger-text' %}
+    {% set cls = 'text-sm text-danger hover:text-danger-hover transition-colors cursor-pointer' %}
+  {% else %}
+    {% set cls = base ~ ' bg-white border border-[#d9d9d9] text-black/[0.88] hover:border-primary-hover hover:text-primary-hover' %}
+  {% endif %}
+  {% if href %}
+<a href="{{ href }}" class="{{ cls }} {{ extra }}">{{ text }}</a>
+  {% else %}
+<button type="{{ type }}" class="{{ cls }} {{ extra }}"{% if onclick %} onclick="{{ onclick }}"{% endif %}>{{ text }}</button>
+  {% endif %}
+{% endmacro %}
+
+{% macro link_text(text, href) %}
+<a href="{{ href }}" class="text-sm text-primary hover:text-primary-hover transition-colors">{{ text }}</a>
+{% endmacro %}

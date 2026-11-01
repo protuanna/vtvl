@@ -1,41 +1,45 @@
 {% macro render_field(field, value=none, name_override=none, ref_options=none) %}
   {% set fname = name_override if name_override else field.name %}
-  <div class="field">
-    <label for="f_{{ fname }}">{{ field.label }}{% if field.get('required') %} <span class="req">*</span>{% endif %}</label>
+  {% set input_cls = 'w-full max-w-md rounded-md border border-[#d9d9d9] bg-white px-3 py-1.5 text-sm text-black/[0.88] placeholder:text-black/25 transition-colors focus:border-primary-hover focus:outline-none focus:ring-2 focus:ring-primary/15' %}
+  <div class="mb-4 flex max-w-md flex-col">
+    <label for="f_{{ fname }}" class="mb-1 text-sm font-medium text-black/[0.88]">{{ field.label }}{% if field.get('required') %} <span class="text-danger">*</span>{% endif %}</label>
     {% if field.type == 'textarea' %}
-      <textarea id="f_{{ fname }}" name="{{ fname }}" rows="2">{{ value if value is not none else '' }}</textarea>
+      <textarea id="f_{{ fname }}" name="{{ fname }}" rows="2" class="{{ input_cls }} resize-y">{{ value if value is not none else '' }}</textarea>
     {% elif field.type == 'select' %}
-      <select id="f_{{ fname }}" name="{{ fname }}" {% if field.get('required') %}required{% endif %}>
+      <select id="f_{{ fname }}" name="{{ fname }}" class="{{ input_cls }}" {% if field.get('required') %}required{% endif %}>
         <option value="">-- Chọn --</option>
         {% for opt in field.options %}
           <option value="{{ opt }}" {% if value == opt %}selected{% endif %}>{{ opt }}</option>
         {% endfor %}
       </select>
     {% elif field.type == 'select_soft' %}
-      <input list="dl_{{ fname }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}">
+      <input list="dl_{{ fname }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" class="{{ input_cls }}">
       <datalist id="dl_{{ fname }}">
         {% for opt in field.options %}<option value="{{ opt }}">{% endfor %}
       </datalist>
     {% elif field.type == 'ref' %}
-      <input list="dl_{{ fname }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" {% if field.get('required') %}required{% endif %}>
+      <input list="dl_{{ fname }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" class="{{ input_cls }}" {% if field.get('required') %}required{% endif %}>
       <datalist id="dl_{{ fname }}">
         {% for opt in (ref_options.get(field.name, []) if ref_options else []) %}<option value="{{ opt }}">{% endfor %}
       </datalist>
     {% elif field.type in ('number', 'int') %}
-      <input type="number" step="{{ 'any' if field.type == 'number' else '1' }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" {% if field.get('required') %}required{% endif %}>
+      <input type="number" step="{{ 'any' if field.type == 'number' else '1' }}" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" class="{{ input_cls }}" {% if field.get('required') %}required{% endif %}>
     {% else %}
-      <input type="text" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" {% if field.get('required') %}required{% endif %}>
+      <input type="text" id="f_{{ fname }}" name="{{ fname }}" value="{{ value if value is not none else '' }}" class="{{ input_cls }}" {% if field.get('required') %}required{% endif %}>
     {% endif %}
     {% if field.get('guide') %}
       {% set g = field.guide %}
-      <details class="field-guide">
-        <summary>Hướng dẫn nhập{% if g.loai %} · {{ g.loai }}{% endif %}</summary>
-        <dl>
-          {% if g.dien %}<dt>Điền nội dung gì</dt><dd>{{ g.dien }}</dd>{% endif %}
-          {% if g.nguon %}<dt>Nguồn lấy dữ liệu</dt><dd>{{ g.nguon }}</dd>{% endif %}
-          {% if g.cach_ghi %}<dt>Cách ghi</dt><dd>{{ g.cach_ghi }}</dd>{% endif %}
-          {% if g.loai %}<dt>Loại thao tác</dt><dd>{{ g.loai }}</dd>{% endif %}
-          {% if g.luu_y %}<dt>Lưu ý / không được làm</dt><dd>{{ g.luu_y }}</dd>{% endif %}
+      <details class="group mt-2 max-w-md text-xs">
+        <summary class="flex cursor-pointer select-none list-none items-center gap-1 text-primary transition-colors hover:text-primary-hover">
+          <span class="inline-block transition-transform duration-150 group-open:rotate-90">▸</span>
+          <span>Hướng dẫn nhập{% if g.loai %} · {{ g.loai }}{% endif %}</span>
+        </summary>
+        <dl class="mt-2 space-y-2 rounded-md border border-black/[0.06] bg-[#fafafa] p-3">
+          {% if g.dien %}<div><dt class="font-medium text-black/65">Điền nội dung gì</dt><dd class="mt-0.5 text-black/45">{{ g.dien }}</dd></div>{% endif %}
+          {% if g.nguon %}<div><dt class="font-medium text-black/65">Nguồn lấy dữ liệu</dt><dd class="mt-0.5 text-black/45">{{ g.nguon }}</dd></div>{% endif %}
+          {% if g.cach_ghi %}<div><dt class="font-medium text-black/65">Cách ghi</dt><dd class="mt-0.5 text-black/45">{{ g.cach_ghi }}</dd></div>{% endif %}
+          {% if g.loai %}<div><dt class="font-medium text-black/65">Loại thao tác</dt><dd class="mt-0.5 text-black/45">{{ g.loai }}</dd></div>{% endif %}
+          {% if g.luu_y %}<div><dt class="font-medium text-black/65">Lưu ý / không được làm</dt><dd class="mt-0.5 text-black/45">{{ g.luu_y }}</dd></div>{% endif %}
         </dl>
       </details>
     {% endif %}

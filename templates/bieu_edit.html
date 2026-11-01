@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% from "_fields_macro.html" import render_field %}
+{% from "_ui_macro.html" import btn %}
 {% block title %}Sửa dòng – {{ bieu.label }}{% endblock %}
 {% block content %}
-  <p><a href="{{ back_url }}">&larr; {{ bieu.label }}</a></p>
-  <h1>Sửa dòng – {{ bieu.label }}</h1>
-  <form method="post" class="simple-form">
-    {% for f in bieu.fields %}{{ render_field(f, getattr(row, f.name), none, ref_options) }}{% endfor %}
-    <button type="submit">Lưu thay đổi</button>
-  </form>
+  <p class="mb-2"><a href="{{ back_url }}" class="text-sm text-primary hover:text-primary-hover">&larr; {{ bieu.label }}</a></p>
+  <h1 class="mb-5 text-2xl font-semibold text-black/[0.88]">Sửa dòng – {{ bieu.label }}</h1>
+  <div class="max-w-xl rounded-lg border border-black/[0.06] bg-white p-6 shadow-card">
+    <form method="post">
+      {% for f in bieu.fields %}{{ render_field(f, getattr(row, f.name), none, ref_options) }}{% endfor %}
+      {{ btn('Lưu thay đổi') }}
+    </form>
+  </div>
 {% endblock %}

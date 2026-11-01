@@ -1,21 +1,25 @@
 {% extends "base.html" %}
+{% from "_ui_macro.html" import btn %}
 {% block title %}Nhập từ tài liệu (AI) – {{ bieu.label }}{% endblock %}
 {% block content %}
-  <p><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">&larr; {{ bieu.label }}</a></p>
-  <h1>Nhập từ tài liệu (AI) – {{ bieu.label }}</h1>
-  <p class="muted">
+  <p class="mb-2"><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}" class="text-sm text-primary hover:text-primary-hover">&larr; {{ bieu.label }}</a></p>
+  <h1 class="mb-3 text-2xl font-semibold text-black/[0.88]">Nhập từ tài liệu (AI) – {{ bieu.label }}</h1>
+  <p class="mb-5 max-w-2xl text-sm text-black/45">
     Tải lên một file PDF hoặc DOCX (quyết định, danh mục, văn bản chức năng-nhiệm vụ...). AI sẽ đọc nội dung
     (kể cả bản scan, bằng khả năng nhận diện hình ảnh) và gợi ý các dòng dữ liệu cho biểu này.
     Bạn sẽ được xem lại và chỉnh sửa trước khi lưu — không có gì được lưu tự động.
   </p>
 
-  <form method="post" enctype="multipart/form-data" class="simple-form">
-    <div class="field">
-      <label for="file">Chọn file (.pdf hoặc .docx)</label>
-      <input type="file" id="file" name="file" accept=".pdf,.docx" required>
-    </div>
-    <button type="submit">Đọc và trích xuất</button>
-  </form>
+  <div class="max-w-xl rounded-lg border border-black/[0.06] bg-white p-6 shadow-card">
+    <form method="post" enctype="multipart/form-data">
+      <div class="mb-4 flex flex-col">
+        <label for="file" class="mb-1 text-sm font-medium text-black/[0.88]">Chọn file (.pdf hoặc .docx)</label>
+        <input type="file" id="file" name="file" accept=".pdf,.docx" required
+               class="w-full rounded-md border border-[#d9d9d9] bg-white px-3 py-1.5 text-sm text-black/[0.88] file:mr-3 file:rounded-md file:border-0 file:bg-[#f0f0f0] file:px-3 file:py-1 file:text-sm file:text-black/[0.88] hover:file:bg-[#e6e6e6]">
+      </div>
+      {{ btn('Đọc và trích xuất') }}
+    </form>
+  </div>
 
-  <p class="muted">Cần biến môi trường <code>ANTHROPIC_API_KEY</code> đã cấu hình trên máy chạy app (xem README.md).</p>
+  <p class="mt-5 text-xs text-black/45">Cần biến môi trường <code class="rounded bg-black/[0.06] px-1.5 py-0.5">ANTHROPIC_API_KEY</code> đã cấu hình trên máy chạy app (xem README.md).</p>
 {% endblock %}

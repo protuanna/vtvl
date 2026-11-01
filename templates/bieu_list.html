@@ -1,39 +1,40 @@
 {% extends "base.html" %}
 {% from "_fields_macro.html" import render_field %}
+{% from "_ui_macro.html" import btn %}
 {% block title %}{{ bieu.label }} – {{ don_vi.ten_co_quan }}{% endblock %}
 {% block content %}
-  <p><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}">&larr; {{ don_vi.ten_co_quan }}</a></p>
-  <h1>{{ bieu.label }}</h1>
-  <p class="muted">Sheet trong file mẫu: {{ bieu.sheet_name }} — tối đa {{ "{:,}".format(30000) }} dòng/đơn vị khi xuất.
+  <p class="mb-2"><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}" class="text-sm text-primary hover:text-primary-hover">&larr; {{ don_vi.ten_co_quan }}</a></p>
+  <h1 class="mb-1 text-2xl font-semibold text-black/[0.88]">{{ bieu.label }}</h1>
+  <p class="mb-5 text-sm text-black/45">Sheet trong file mẫu: {{ bieu.sheet_name }} — tối đa {{ "{:,}".format(30000) }} dòng/đơn vị khi xuất.
     {% if bieu.get('step_note') %}{{ bieu.step_note }}{% endif %}</p>
 
-  <div class="actions" style="margin-bottom:1rem;">
-    <button type="button" onclick="document.getElementById('modal-add').classList.add('open')">+ Thêm dòng mới</button>
-    <a class="button" href="{{ url_for('bieu_import_excel', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">Nhập từ Excel có sẵn</a>
-    <a class="button" href="{{ url_for('bieu_import_ai', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">Nhập từ tài liệu (AI)</a>
+  <div class="mb-5 flex flex-wrap gap-3">
+    {{ btn('+ Thêm dòng mới', variant='primary', type='button', onclick="document.getElementById('modal-add').classList.add('open')") }}
+    {{ btn('Nhập từ Excel có sẵn', variant='default', href=url_for('bieu_import_excel', don_vi_id=don_vi.id, bieu_key=bieu.key)) }}
+    {{ btn('Nhập từ tài liệu (AI)', variant='default', href=url_for('bieu_import_ai', don_vi_id=don_vi.id, bieu_key=bieu.key)) }}
   </div>
 
-  <div class="table-scroll">
-    <table class="data-table">
+  <div class="overflow-x-auto rounded-lg border border-black/[0.06] bg-white shadow-card">
+    <table class="w-full border-collapse text-sm">
       <thead>
-        <tr>
-          {% for f in bieu.fields %}<th>{{ f.label }}</th>{% endfor %}
-          <th></th>
+        <tr class="bg-[#fafafa] text-left text-black/[0.88]">
+          {% for f in bieu.fields %}<th class="whitespace-nowrap border-b border-black/[0.06] px-4 py-3 font-medium">{{ f.label }}</th>{% endfor %}
+          <th class="border-b border-black/[0.06] px-4 py-3 font-medium"></th>
         </tr>
       </thead>
       <tbody>
         {% for row in rows %}
-          <tr>
-            {% for f in bieu.fields %}<td>{{ getattr(row, f.name) }}</td>{% endfor %}
-            <td class="actions">
-              <a href="{{ url_for('bieu_sua', don_vi_id=don_vi.id, bieu_key=bieu.key, row_id=row.id) }}">Sửa</a>
-              <form method="post" action="{{ url_for('bieu_xoa', don_vi_id=don_vi.id, bieu_key=bieu.key, row_id=row.id) }}" class="inline-form" onsubmit="return confirm('Xóa dòng này?');">
-                <button type="submit" class="danger">Xóa</button>
+          <tr class="transition-colors hover:bg-[#fafafa]">
+            {% for f in bieu.fields %}<td class="border-b border-black/[0.06] px-4 py-3 align-top">{{ getattr(row, f.name) }}</td>{% endfor %}
+            <td class="whitespace-nowrap border-b border-black/[0.06] px-4 py-3 align-top">
+              <a href="{{ url_for('bieu_sua', don_vi_id=don_vi.id, bieu_key=bieu.key, row_id=row.id) }}" class="mr-4 text-primary hover:text-primary-hover">Sửa</a>
+              <form method="post" action="{{ url_for('bieu_xoa', don_vi_id=don_vi.id, bieu_key=bieu.key, row_id=row.id) }}" class="inline" onsubmit="return confirm('Xóa dòng này?');">
+                {{ btn('Xóa', variant='danger-text') }}
               </form>
             </td>
           </tr>
         {% else %}
-          <tr><td colspan="{{ bieu.fields|length + 1 }}">Chưa có dữ liệu. Bấm "+ Thêm dòng mới" ở trên để bắt đầu.</td></tr>
+          <tr><td colspan="{{ bieu.fields|length + 1 }}" class="px-4 py-6 text-center text-black/45">Chưa có dữ liệu. Bấm "+ Thêm dòng mới" ở trên để bắt đầu.</td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -41,11 +42,13 @@
 
   <div id="modal-add" class="modal-backdrop" onclick="if(event.target===this) this.classList.remove('open')">
     <div class="modal-box">
-      <button type="button" class="modal-close" onclick="document.getElementById('modal-add').classList.remove('open')">&times;</button>
-      <h2>Thêm dòng mới — {{ bieu.label }}</h2>
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-black/[0.88]">Thêm dòng mới — {{ bieu.label }}</h2>
+        <button type="button" class="text-xl leading-none text-black/45 hover:text-black/[0.88]" onclick="document.getElementById('modal-add').classList.remove('open')">&times;</button>
+      </div>
       <form method="post" action="{{ action_url }}">
         {% for f in bieu.fields %}{{ render_field(f, none, none, ref_options) }}{% endfor %}
-        <button type="submit">Lưu dòng mới</button>
+        {{ btn('Lưu dòng mới') }}
       </form>
     </div>
   </div>

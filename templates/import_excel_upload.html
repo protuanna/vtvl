@@ -1,29 +1,33 @@
 {% extends "base.html" %}
+{% from "_ui_macro.html" import btn %}
 {% block title %}Nhập từ file Excel có sẵn – {{ don_vi.ten_co_quan }}{% endblock %}
 {% block content %}
   {% if bieu %}
-    <p><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}">&larr; {{ bieu.label }}</a></p>
-    <h1>Nhập từ file Excel có sẵn — {{ bieu.label }}</h1>
-    <p class="muted">
+    <p class="mb-2"><a href="{{ url_for('bieu_list_view', don_vi_id=don_vi.id, bieu_key=bieu.key) }}" class="text-sm text-primary hover:text-primary-hover">&larr; {{ bieu.label }}</a></p>
+    <h1 class="mb-3 text-2xl font-semibold text-black/[0.88]">Nhập từ file Excel có sẵn — {{ bieu.label }}</h1>
+    <p class="mb-3 max-w-2xl text-sm text-black/45">
       Chỉ đọc đúng 1 sheet "{{ bieu.sheet_name }}" trong file tải lên. File không cần đúng cấu trúc
       đủ cả 9 biểu — chỉ cần có sheet tên đúng như vậy với cột giống file mẫu chính thức.
     </p>
   {% else %}
-    <p><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}">&larr; {{ don_vi.ten_co_quan }}</a></p>
-    <h1>Nhập từ file Excel có sẵn — cả 9 biểu</h1>
-    <p class="muted">
+    <p class="mb-2"><a href="{{ url_for('don_vi_dashboard', don_vi_id=don_vi.id) }}" class="text-sm text-primary hover:text-primary-hover">&larr; {{ don_vi.ten_co_quan }}</a></p>
+    <h1 class="mb-3 text-2xl font-semibold text-black/[0.88]">Nhập từ file Excel có sẵn — cả 9 biểu</h1>
+    <p class="mb-3 max-w-2xl text-sm text-black/45">
       Dùng khi đơn vị đã có sẵn một file Excel làm thủ công theo đúng cấu trúc file mẫu chính thức
       (tên sheet và cột giống hệt file mẫu Bộ biểu VTVL). App sẽ đọc tất cả sheet (A1 → D2) trong
       cùng một file.
     </p>
   {% endif %}
-  <p class="muted">Cho bạn xem lại và xác nhận trước khi lưu — không tự động ghi thẳng. Không cần AI, đọc trực tiếp đúng cột nên nhanh và chính xác tuyệt đối với dữ liệu đã có trong file.</p>
+  <p class="mb-5 max-w-2xl text-sm text-black/45">Cho bạn xem lại và xác nhận trước khi lưu — không tự động ghi thẳng. Không cần AI, đọc trực tiếp đúng cột nên nhanh và chính xác tuyệt đối với dữ liệu đã có trong file.</p>
 
-  <form method="post" enctype="multipart/form-data" class="simple-form">
-    <div class="field">
-      <label for="file">Chọn file (.xlsx)</label>
-      <input type="file" id="file" name="file" accept=".xlsx" required>
-    </div>
-    <button type="submit">Đọc file</button>
-  </form>
+  <div class="max-w-xl rounded-lg border border-black/[0.06] bg-white p-6 shadow-card">
+    <form method="post" enctype="multipart/form-data">
+      <div class="mb-4 flex flex-col">
+        <label for="file" class="mb-1 text-sm font-medium text-black/[0.88]">Chọn file (.xlsx)</label>
+        <input type="file" id="file" name="file" accept=".xlsx" required
+               class="w-full rounded-md border border-[#d9d9d9] bg-white px-3 py-1.5 text-sm text-black/[0.88] file:mr-3 file:rounded-md file:border-0 file:bg-[#f0f0f0] file:px-3 file:py-1 file:text-sm file:text-black/[0.88] hover:file:bg-[#e6e6e6]">
+      </div>
+      {{ btn('Đọc file') }}
+    </form>
+  </div>
 {% endblock %}
